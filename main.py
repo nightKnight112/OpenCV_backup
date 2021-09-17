@@ -69,16 +69,16 @@ while True:
         contours, h = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cv2.imshow("After contour detection", mask)
         cnts = sorted(contours, key=cv2.contourArea, reverse=True)[:10]  # stores first 10 largest contour points
-        center = None
         c = max(cnts, key=cv2.contourArea)
         ((x, y), radius) = cv2.minEnclosingCircle(c)
-        M = cv2.moments(c)
-        center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
         if radius > 10:
             # draw the circle and centroid on the frame,
             # then update the list of tracked points
             cv2.rectangle(frame, (int(x - radius), int(y - radius)), (int(x + radius), int(y + radius)),
                           (0, 255, 255), 2)
+            cv2.circle(frame,(int(x),int(y)),2,(0,0,255),-1)
+            text = "({},{})".format(int(x),int(y))
+            cv2.putText(frame,text,(int(x),int(y-10)),cv2.FONT_HERSHEY_PLAIN,1,(0,0,255),2)
         cv2.imshow("Original after horizontal scaling", frame)
         # done till finding out of the largest contour(i.e. the bot's realtime position)
         if len(cnts) <= 0:
